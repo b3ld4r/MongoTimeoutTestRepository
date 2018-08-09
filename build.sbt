@@ -1,4 +1,4 @@
-name := """play-java-starter-example"""
+name := """mongo_timeout_test"""
 
 version := "1.0-SNAPSHOT"
 
@@ -19,3 +19,12 @@ libraryDependencies += "org.awaitility" % "awaitility" % "2.0.0" % Test
 
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
+
+sources in (Compile, doc) := Seq.empty
+publishArtifact in (Compile, packageDoc) := false
+
+packageName in Universal := {
+  val name = (packageName in Universal).value
+  def timestamp = new java.text.SimpleDateFormat("yyyy.MM.dd.HH.mm.ss") format new java.util.Date()
+  if (isSnapshot.value) s"$name-$timestamp" else name
+}
