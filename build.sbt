@@ -10,8 +10,12 @@ crossScalaVersions := Seq("2.11.12", "2.12.4")
 
 libraryDependencies += guice
 
-// Test Database
-libraryDependencies += "com.h2database" % "h2" % "1.4.197"
+//Database
+libraryDependencies += "org.mongodb" % "mongo-java-driver" % "3.6.4"
+libraryDependencies += "org.mongodb.morphia" % "morphia" % "1.3.2"
+
+//Jackson
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.7"
 
 // Testing libraries for dealing with CompletionStage...
 libraryDependencies += "org.assertj" % "assertj-core" % "3.6.2" % Test

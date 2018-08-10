@@ -1,36 +1,38 @@
 package models;
 
+import configuration.MongoConfig;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Entity(value = "keyboards")
 public class Keyboard {
 
-    public static final int DEFAULT_ID = 0;
-    public static final String DEFAULT_BRAND = "dell";
-
-    private int id;
+    @Id
+    private Long id;
 
     private String brand;
 
     public Keyboard() {
-        this(DEFAULT_ID, DEFAULT_BRAND);
-    }
-
-    public Keyboard(int id, String brand) {
-        this.id = id;
-        this.brand = brand;
     }
 
     public Keyboard(String brand) {
-        this(DEFAULT_ID, brand);
+        id = getLastId() + 1;
+        this.brand = brand;
+        MongoConfig.datastore().save(this);
     }
 
-    public Keyboard(int id) {
-        this(id, DEFAULT_BRAND);
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,5 +42,41 @@ public class Keyboard {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public void update(String brand) {
+        setBrand(brand);
+        UpdateOperations<Keyboard> ops = MongoConfig.datastore().createUpdateOperations(Keyboard.class).set("brand", brand);
+        MongoConfig.datastore().update(queryToFindSelf(), ops);
+    }
+
+    public void delete() {
+        MongoConfig.datastore().delete(this);
+    }
+
+    public static Keyboard getById(Long id) {
+        return MongoConfig.datastore().createQuery(Keyboard.class).field(Mapper.ID_KEY).equal(id).get();
+    }
+
+    public static List<Keyboard> getAll() {
+        return MongoConfig.datastore().find(Keyboard.class).asList();
+    }
+
+    private Query<Keyboard> queryToFindSelf() {
+        return MongoConfig.datastore().createQuery(Keyboard.class).field(Mapper.ID_KEY).equal(id);
+    }
+
+    private Long getLastId() {
+        List<Keyboard> keyboards = getAll();
+        if (keyboards == null || keyboards.isEmpty()) {
+            return 0L;
+        } else {
+            List<Long> ids = new ArrayList<>();
+            for (Keyboard keyboard : keyboards) {
+                ids.add(keyboard.id);
+            }
+
+            return Collections.max(ids);
+        }
     }
 }

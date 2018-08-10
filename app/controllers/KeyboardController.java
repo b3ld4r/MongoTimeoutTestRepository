@@ -1,32 +1,39 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import models.Keyboard;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 public class KeyboardController extends Controller {
 
-    //TODO
-    public Result createKeyboard() {
-        return null;
+    public Result createKeyboard(String brand) {
+        Keyboard keyboard = new Keyboard(brand);
+        return created((JsonNode) new ObjectMapper().valueToTree(keyboard));
     }
 
-    //TODO
     public Result getAll() {
-        return null;
+        return ok((JsonNode) new ObjectMapper().valueToTree(Keyboard.getAll()));
     }
 
-    //TODO
-    public Result updateKeyboard(int id) {
-        return null;
+    public Result updateKeyboard(Long id, String brand) {
+
+        Keyboard keyboard = Keyboard.getById(id);
+        keyboard.update(brand);
+        return ok((JsonNode) new ObjectMapper().valueToTree(keyboard));
     }
 
-    //TODO
-    public Result getKeyboard(int id) {
-        return null;
+    public Result getKeyboard(Long id) {
+
+        Keyboard keyboard = Keyboard.getById(id);
+        return ok((JsonNode) new ObjectMapper().valueToTree(keyboard));
     }
 
-    //TODO
-    public Result deleteKeyboard(int id) {
-        return null;
+    public Result deleteKeyboard(Long id) {
+
+        Keyboard keyboard = Keyboard.getById(id);
+        keyboard.delete();
+        return noContent();
     }
 }
