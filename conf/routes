@@ -2,9 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-POST    /keyboards                  controllers.KeyboardController.createKeyboard()
+POST    /keyboards                  controllers.KeyboardController.createKeyboard(brand)
 GET     /keyboards                  controllers.KeyboardController.getAll()
 
-PUT     /keyboards/:id              controllers.KeyboardController.updateKeyboard(id:int)
-GET     /keyboards/:id              controllers.KeyboardController.getKeyboard(id:int)
-DELETE  /keyboards/:id              controllers.KeyboardController.deleteKeyboard(id:int)
+PUT     /keyboards/:id              controllers.KeyboardController.updateKeyboard(id:Long, brand)
+GET     /keyboards/:id              controllers.KeyboardController.getKeyboard(id:Long)
+DELETE  /keyboards/:id              controllers.KeyboardController.deleteKeyboard(id:Long)
