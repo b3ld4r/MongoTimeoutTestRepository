@@ -1,9 +1,14 @@
 package configuration;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
 import com.typesafe.config.ConfigFactory;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoConfig {
 
@@ -23,11 +28,9 @@ public class MongoConfig {
 
         morphia.mapPackage("app.models");
 
-        MongoClient mongoClient = new MongoClient(
-                ConfigFactory.load().getString("mongodb.host"),
-                ConfigFactory.load().getInt("mongodb.port"));
+        MongoClient mongoClient = new MongoClient(new MongoClientURI(ConfigFactory.load().getString("mongodb.uri")));
 
         datastore = morphia.createDatastore(
-                mongoClient, ConfigFactory.load().getString("mongodb.database"));
+                mongoClient, ConfigFactory.load().getString("mongodb.db_name"));
     }
 }
